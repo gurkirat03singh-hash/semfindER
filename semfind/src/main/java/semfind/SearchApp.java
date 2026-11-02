@@ -29,6 +29,7 @@ public final class SearchApp extends JFrame {
     private final GlassButton addBtn = new GlassButton("Add folder...");
     private final GlassButton clearBtn = new GlassButton("Clear results");
     private final GlassButton themeBtn = new GlassButton("Dark mode");
+    private final GlassButton appDetails = new GlassButton("SemFind v0.2");
 
     private static final Color LIGHT_BACKGROUND = new Color(0xF2EBDD);
     private static final Color LIGHT_SURFACE = new Color(0xFFFCF6);
@@ -42,7 +43,7 @@ public final class SearchApp extends JFrame {
     private boolean darkMode;
 
     public SearchApp(Indexer indexer, Searcher searcher) {
-        super("SemFind - meaning-based file search");
+        super("NotefIND - meaning-based file search");
         this.indexer = indexer;
         this.searcher = searcher;
 
@@ -55,13 +56,23 @@ public final class SearchApp extends JFrame {
         toolbar.setFloatable(true);
         toolbar.setRollover(true);
         toolbar.setBorder(BorderFactory.createEmptyBorder(12, 16, 6, 16));
-        toolbar.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        toolbar.setLayout(new BoxLayout (toolbar, BoxLayout.X_AXIS));
+
         toolbar.add(searchBtn);
+        toolbar.add(Box.createHorizontalStrut(8));
+    
         toolbar.add(addBtn);
-        toolbar.addSeparator();
+        toolbar.add(Box.createHorizontalStrut(8));
+
         toolbar.add(clearBtn);
-        toolbar.addSeparator();
+        toolbar.add(Box.createHorizontalStrut(8));
+
         toolbar.add(themeBtn);
+
+        toolbar.add(Box.createHorizontalGlue());
+
+        toolbar.add(appDetails);
+
 
         JPanel searchBar = new JPanel(new BorderLayout(6, 6));
         searchBar.setBorder(BorderFactory.createEmptyBorder(6, 16, 14, 16));
@@ -72,6 +83,8 @@ public final class SearchApp extends JFrame {
         JPanel top = new JPanel(new BorderLayout());
         top.add(toolbar, BorderLayout.NORTH);
         top.add(searchBar, BorderLayout.SOUTH);
+        
+        
 
         query.putClientProperty("JTextField.placeholderText", "Search by meaning or keywords...");
         list.setFont(new Font("Roboto", Font.PLAIN, 13));
@@ -116,6 +129,20 @@ public final class SearchApp extends JFrame {
             query.requestFocusInWindow();
         });
         setDarkMode(true);
+
+        appDetails.addActionListener(e -> {
+            JDialog dialog = new JDialog(this, "App Details", true);
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.add(new JLabel("NotefindER-Finds your And your a..."));
+            panel.add(new JLabel("Proto--02 version"));
+            panel.add(new JLabel("Author:Nameless One"));
+            dialog.add (panel);
+            dialog.setContentPane(panel);
+            dialog.pack();
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+        });
 
         ListSelectionListener selectionListener = e -> {
             if (e.getValueIsAdjusting()) return;
@@ -229,7 +256,7 @@ public final class SearchApp extends JFrame {
         SwingUtilities.updateComponentTreeUI(this);
 
         darkMode = enabled;
-        themeBtn.setToolTipText(enabled ? "Darkness shall consume the world" : "let there be light");
+        themeBtn.setToolTipText(enabled ? "let there be light" : "darkness shall consume the world");
         Color background = enabled ? DARK_BACKGROUND : LIGHT_BACKGROUND;
         Color surface = enabled ? DARK_SURFACE : LIGHT_SURFACE;
         Color foreground = enabled ? DARK_FOREGROUND : LIGHT_FOREGROUND;

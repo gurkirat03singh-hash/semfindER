@@ -9,6 +9,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook; // .xlsx
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +31,7 @@ public final class TextExtractor {
         if (name.endsWith(".pdf"))  return pdf(p);
         if (name.endsWith(".docx")) return docx(p);
         if (name.endsWith(".ppt")) return ppt(p);
+        if (name.endsWith(".xlsx")) return xlsx(p);
         String text = new String(Files.readAllBytes(p), StandardCharsets.UTF_8);
         return List.of(new Page(1, text));
     }
@@ -72,4 +75,25 @@ public final class TextExtractor {
             return pages;
         }
     }
+
+    private static List<Page> xlsx(Path p) throws IOException{
+        try(InputStream in = Files.newInputStream(p); 
+        XSSFWorkbook show = new XSSFWorkbook(in)) {
+            List<Page> pages = new ArrayList<>();
+            int number = 1;
+            for (Sheet sheet : show) {
+                StringBuilder text = new StringBuilder();
+                for (Row row : sheet) {
+                    for (Cell cell : row) {
+                        if (text.length() > 0) text.append('\t');
+                        text.append(cell.toString());
+                    }
+                    text.append('\n');
+                }
+                pages.add(new Page(number++, text.toString()));
+            }
+            return pages;
+        }
+    }
+   
 }

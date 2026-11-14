@@ -29,7 +29,7 @@ public final class SearchApp extends JFrame {
     private final GlassButton addBtn = new GlassButton("Add folder...");
     private final GlassButton clearBtn = new GlassButton("Clear results");
     private final GlassButton themeBtn = new GlassButton("Dark mode");
-    private final GlassButton appDetails = new GlassButton("SemFind v0.2");
+    private final GlassButton appDetails = new GlassButton("NotefIND v0.2");
 
     private static final Color LIGHT_BACKGROUND = new Color(0xF2EBDD);
     private static final Color LIGHT_SURFACE = new Color(0xFFFCF6);
@@ -130,19 +130,62 @@ public final class SearchApp extends JFrame {
         });
         setDarkMode(true);
 
-        appDetails.addActionListener(e -> {
-            JDialog dialog = new JDialog(this, "App Details", true);
-            JPanel panel = new JPanel();
-            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-            panel.add(new JLabel("NotefindER-Finds your And your a..."));
-            panel.add(new JLabel("Proto--02 version"));
-            panel.add(new JLabel("Author:Nameless One"));
-            dialog.add (panel);
-            dialog.setContentPane(panel);
-            dialog.pack();
-            dialog.setLocationRelativeTo(this);
-            dialog.setVisible(true);
-        });
+        
+        String message = "<html>" + "<div style='text-align: center;'>" 
+                + "<h1>NotefIND</h1>" 
+                + "<p>Welcome to NotefIND!<br>find your notes,a**, but not your money .</p>" 
+                + "<p>Version 0.2</p>"
+                + "<p>Developed by <a href='https://github.com/gurkirat03singh-hash'>NAMELESS ONE</a></p>"
+                + "</div>" 
+                + "</html>";
+            
+                JPanel overlay = new JPanel(new GridBagLayout()) {
+                      
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, getWidth(), getHeight());
+    }
+};
+overlay.setOpaque(false);
+
+JPanel card = new JPanel();
+card.setPreferredSize(new Dimension(320, 250));
+card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+JLabel label = new JLabel(message);
+label.setFont(new Font("Roboto", Font.PLAIN, 20));
+card.add(label);
+label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+
+JButton closeButton = new JButton("\u00D7");
+closeButton.setFont(new Font("Arial", Font.PLAIN, 24));
+closeButton.setBorderPainted(false);
+closeButton.setContentAreaFilled(false);
+closeButton.setFocusPainted(false);
+closeButton.setToolTipText("Close");
+closeButton.setVisible(true);
+
+JPanel holditforme = new JPanel(null);
+holditforme.setOpaque(false);
+holditforme.setPreferredSize(new Dimension(390, 280));
+card.setBounds(30, 30, 330, 250);
+closeButton.setBounds(330, 0, 40, 40);
+holditforme.add(card);
+holditforme.add(closeButton);
+
+
+
+overlay.add(holditforme);
+setGlassPane(overlay);
+overlay.setVisible(false);
+
+closeButton.addActionListener(e -> overlay.setVisible(false));
+appDetails.addActionListener(e -> overlay.setVisible(true));
+
+    
+        
 
         ListSelectionListener selectionListener = e -> {
             if (e.getValueIsAdjusting()) return;
